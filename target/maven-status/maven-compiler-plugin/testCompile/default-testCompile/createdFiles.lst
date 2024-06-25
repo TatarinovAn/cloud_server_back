@@ -1,0 +1,6 @@
+ru/netology/cloudserver/serviceTest/FileServiceTest.class
+ru/netology/cloudserver/repositoryTest/AuthenticationRepositoryTest.class
+ru/netology/cloudserver/controlerTest/CloudControllerTest.class
+ru/netology/cloudserver/CloudServerApplicationTests.class
+ru/netology/cloudserver/repositoryTest/UserRepositoryTest.class
+ru/netology/cloudserver/repositoryTest/FileRepositoryTest.class

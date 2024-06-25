@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/netology/cloud_server/repository/CloudRepositoryFiles.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/netology/cloud_server/resources/db/migration/create_table_files.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/netology/cloud_server/resources/db/migration/create_table_users.sql" dialect="GenericSQL" />
+  </component>
+</project>

@@ -1,0 +1,32 @@
+version: '1.0'
+
+services:
+  server:
+    build: ./
+    container_name: 'cloud_server'
+    image: 'cloud_server:0.0.1'
+    ports:
+      - '8181:8181'
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Macwork
+
+
+  db:
+    container_name: 'cloud-db'
+    image: postgres
+    environment:
+      POSTGRES_DB: "netology"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Macwork"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres:
