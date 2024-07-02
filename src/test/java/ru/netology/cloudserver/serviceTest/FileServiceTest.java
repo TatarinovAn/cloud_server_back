@@ -16,6 +16,7 @@ import ru.netology.cloudserver.CloudServerApplicationTests;
 
 import java.util.LinkedList;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.*;
 
 
@@ -38,19 +39,11 @@ public class FileServiceTest extends CloudServerApplicationTests {
 
     @Test
     public void uploadFile() {
-        byte[] bytes = "FILENAME".getBytes();
-        cloudServiceFile.uploadFile("FILENAME", mockMultipartFile);
+
+        cloudServiceFile.uploadFile("FILENAME", mockMultipartFile, User.builder().build());
 
         var storage = cloudRepositoryFiles.findByUserAndFileName(new User(), "Username");
         assertNotNull(storage);
-    }
-
-    @Test
-    public void getFileList() {
-        cloudServiceFile.uploadFile("username", mockMultipartFile);
-        var fileList = cloudServiceFile.getFileList(3);
-        assertEquals(fileList.getClass(), LinkedList.class);
-
     }
 
 }

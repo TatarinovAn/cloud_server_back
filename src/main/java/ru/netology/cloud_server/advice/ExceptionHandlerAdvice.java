@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
-    private final AtomicInteger id = new AtomicInteger(0);
 
     @ExceptionHandler(InputDataException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(InputDataException e) {

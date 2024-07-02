@@ -34,9 +34,9 @@ public class CloudServiceFile {
 
     //Загрузить файл в бд
 
-    public void uploadFile(String filename, MultipartFile file) {
+    public void uploadFile(String filename, MultipartFile file, User user) {
         try {
-            var user = getUserFromSecurityContext();
+
             cloudRepositoryFiles.save(new File(filename, file.getSize(), file.getBytes(), user));
         } catch (InputDataException e) {
             log.writeLog(STR."Error upload File: \{filename}");
@@ -48,24 +48,15 @@ public class CloudServiceFile {
     }
 
     // Получить файл из бд
-    public List<ListResponse> getFileList(Integer limit) {
+    public List<File> getFileList(Integer limit, User user) {
         try {
-            var user = getUserFromSecurityContext();
             System.out.println(user.getUsername());
             var file = cloudRepositoryFiles.findAllByUser(user, Limit.of(limit));
 //            for (File s : file) {
 //                System.out.println(s.getFileName());
 //                System.out.println(s.getFileSize());
 //            }
-
-            List<ListResponse> result = file.stream()
-                    .map(o -> new ListResponse(o.getFileName(), o.getFileSize()))
-                    .collect(Collectors.toList());
-//            for (ListResponse s : result) {
-//                System.out.println(s);
-//            }
-            return result;
-
+            return file;
         } catch (InputDataException e) {
             log.writeLog("Error get File List");
             throw e;
@@ -78,9 +69,8 @@ public class CloudServiceFile {
 
     // удалить файл из бд
     @Transactional
-    public void deleteFile(String filename) {
+    public void deleteFile(String filename, User user) {
         try {
-            var user = getUserFromSecurityContext();
             cloudRepositoryFiles.deleteByUserAndFileName(user, filename);
         } catch (InputDataException e) {
             log.writeLog("Error delete File");
@@ -93,10 +83,10 @@ public class CloudServiceFile {
 
 // загрузить файл из бд
 
-    public byte[] downloadFile(String filename) {
+    public byte[] downloadFile(String filename, User user) {
         //var user;
         try {
-            var file = getFileByFilename(filename);
+            var file = getFileByFilename(filename, user);
             return file.getFile();
         } catch (InputDataException e) {
             log.writeLog(STR."Error download File: \{filename}");
@@ -109,10 +99,10 @@ public class CloudServiceFile {
 
     // переименовать имя файла
     @Transactional
-    public void editFileName(String filename, EditFileRequest editFileRequest) {
+    public void editFileName(String filename, String newFilename, User user) {
         try {
-            var file = getFileByFilename(filename);
-            file.setFileName(editFileRequest.getFilename());
+            var file = getFileByFilename(filename, user);
+            file.setFileName(newFilename);
             cloudRepositoryFiles.save(file);
         } catch (InputDataException e) {
             log.writeLog(STR."Error edit File: \{filename}");
@@ -124,22 +114,10 @@ public class CloudServiceFile {
 
     }
 
-    //аунтификация пользователя
-    private User getUserFromSecurityContext() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var username = authentication.getName();
-        var user = cloudRepositoryUsers.findByUsername(username);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            log.writeLog(STR."Error authentication user: \{username}");
-            throw new InputDataException(STR."Error authentication user: \{username}");
-        }
-    }
 
     // получение файла
-    private File getFileByFilename(String filename) {
-        var user = getUserFromSecurityContext();
+    private File getFileByFilename(String filename, User user) {
+
         var file = cloudRepositoryFiles.findByUserAndFileName(user, filename);
         if (file.isPresent()) {
             return file.get();
